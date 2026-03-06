@@ -1,7 +1,5 @@
 package com.yaropaul.mynews.ui.screen.detail
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,15 +25,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.text.ClickableText
 import com.yaropaul.mynews.domain.model.Article
 import com.yaropaul.mynews.ui.components.ArticleImage
 import com.yaropaul.mynews.ui.components.CategoryPillTag
@@ -51,7 +48,6 @@ fun DetailContent(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val scrollState = rememberScrollState()
 
     Surface(
@@ -165,30 +161,23 @@ fun DetailContent(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     val urlAnnotated = buildAnnotatedString {
-                        pushStringAnnotation(tag = "URL", annotation = article.url)
-                        withStyle(
-                            style = SpanStyle(
-                                color = NewsBlue,
-                                textDecoration = TextDecoration.Underline
+                        pushLink(
+                            LinkAnnotation.Url(
+                                url = article.url,
+                                styles = TextLinkStyles(
+                                    style = SpanStyle(
+                                        color = NewsBlue,
+                                        textDecoration = TextDecoration.Underline
+                                    )
+                                )
                             )
-                        ) {
-                            append(article.url)
-                        }
+                        )
+                        append(article.url)
                         pop()
                     }
-                    ClickableText(
+                    Text(
                         text = urlAnnotated,
-                        style = MaterialTheme.typography.bodySmall,
-                        onClick = { offset ->
-                            urlAnnotated.getStringAnnotations(
-                                tag = "URL",
-                                start = offset,
-                                end = offset
-                            ).firstOrNull()?.let { annotation ->
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
-                                context.startActivity(intent)
-                            }
-                        }
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
 
