@@ -1,0 +1,33 @@
+# -----------------------------------------------------------------------
+# Android — root .gitignore
+#
+# app/build/  is handled by app/.gitignore
+# .idea/workspace.xml + shelf/ are handled by .idea/.gitignore
+# -----------------------------------------------------------------------
+
+# Gradle cache and daemon files
+.gradle/
+
+# Build outputs
+build/
+
+# Local configuration — contains SDK path and API keys; never commit
+local.properties
+
+# Android Studio / IntelliJ IDEA — machine-specific files
+*.iml
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# Native build artefacts
+.externalNativeBuild/
+.cxx/
+
+# Profiling / capture output
+captures/
+
+# macOS filesystem artefacts
+.DS_Store
