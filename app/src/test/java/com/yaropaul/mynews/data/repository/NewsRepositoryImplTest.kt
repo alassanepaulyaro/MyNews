@@ -35,7 +35,7 @@ class NewsRepositoryImplTest {
             content = "Full content"
         )
         coEvery {
-            apiService.getTopHeadlines(any(), any(), any(), any())
+            apiService.getTopHeadlines(any(), any(), any())
         } returns NewsResponseDto(status = "ok", totalResults = 1, articles = listOf(dto))
 
         val result = repository.getTopHeadlines(country = "us", language = "en")
@@ -53,7 +53,7 @@ class NewsRepositoryImplTest {
             urlToImage = null, publishedAt = null, content = null
         )
         coEvery {
-            apiService.getTopHeadlines(any(), any(), any(), any())
+            apiService.getTopHeadlines(any(), any(), any())
         } returns NewsResponseDto(status = "ok", totalResults = 1, articles = listOf(removedDto))
 
         val result = repository.getTopHeadlines(country = "us", language = "en")

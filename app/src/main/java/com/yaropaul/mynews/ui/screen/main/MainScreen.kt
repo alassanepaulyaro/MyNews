@@ -1,90 +1,66 @@
 package com.yaropaul.mynews.ui.screen.main
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yaropaul.mynews.domain.model.Article
+import com.yaropaul.mynews.R
 import com.yaropaul.mynews.presentation.main.MainUiEvent
 import com.yaropaul.mynews.presentation.main.MainViewModel
-import com.yaropaul.mynews.ui.theme.SerifFontFamily
+import com.yaropaul.mynews.ui.components.ScreenSurface
+import com.yaropaul.mynews.ui.theme.Dimens
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    onArticleClick: (Article) -> Unit,
+    onNavigateToDetail: (articleUrl: String) -> Unit,
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
+    ScreenSurface {
+        // Header — title only, refresh is now done via swipe gesture
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
+                .fillMaxWidth()
+                .padding(
+                    horizontal = Dimens.ScreenPaddingHorizontal,
+                    vertical = Dimens.ScreenPaddingVertical
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            // Header
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = "My News",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = SerifFontFamily,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(4f)
-                )
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    IconButton(onClick = { viewModel.onEvent(MainUiEvent.Refresh) }) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Refresh"
-                        )
-                    }
-                }
-            }
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+        }
 
-            HorizontalDivider(thickness = 0.5.dp)
+        HorizontalDivider(thickness = Dimens.DividerThickness)
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // News list
+        // PullToRefreshBox owns the swipe gesture and the spinner indicator.
+        // isRefreshing is false during initial load (NewsUiState.Loading handles that).
+        PullToRefreshBox(
+            isRefreshing = uiState.isRefreshing,
+            onRefresh = { viewModel.onEvent(MainUiEvent.Refresh) },
+            modifier = Modifier.fillMaxSize()
+        ) {
             NewsListContent(
                 newsState = uiState.newsState,
-                onArticleClick = onArticleClick,
+                onArticleClick = { article -> onNavigateToDetail(article.url) },
                 onRetry = { viewModel.onEvent(MainUiEvent.Refresh) },
                 modifier = Modifier.fillMaxSize()
             )

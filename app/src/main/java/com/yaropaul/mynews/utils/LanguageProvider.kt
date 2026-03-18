@@ -1,5 +1,6 @@
 package com.yaropaul.mynews.utils
 
+import com.yaropaul.mynews.domain.NewsDefaults
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,11 +22,11 @@ class LanguageProvider @Inject constructor() {
 
     fun getLanguage(): String {
         val lang = Locale.getDefault().language.lowercase()
-        return if (lang in supportedLanguages) lang else "en"
+        return if (lang in supportedLanguages) lang else NewsDefaults.FALLBACK_LANGUAGE
     }
 
     fun getCountry(): String {
         val country = Locale.getDefault().country.lowercase()
-        return if (country in supportedCountries) country else "us"
+        return if (country in supportedCountries) country else NewsDefaults.FALLBACK_COUNTRY
     }
 }

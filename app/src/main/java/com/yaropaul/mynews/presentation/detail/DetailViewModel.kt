@@ -2,12 +2,8 @@ package com.yaropaul.mynews.presentation.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.yaropaul.mynews.domain.model.Article
-import com.yaropaul.mynews.ui.navigation.ArticleNavDto
+import com.yaropaul.mynews.ui.navigation.ArticlesCache
 import com.yaropaul.mynews.ui.navigation.NavRoutes
-import com.yaropaul.mynews.ui.navigation.toArticle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,21 +12,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    articlesCache: ArticlesCache
 ) : ViewModel() {
 
-    private val article: Article = run {
-        val raw: String = checkNotNull(savedStateHandle[NavRoutes.ARG_ARTICLE]) {
-            "Missing article navigation argument"
-        }
-        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-        val adapter = moshi.adapter(ArticleNavDto::class.java)
-        val decoded = java.net.URLDecoder.decode(raw, "UTF-8")
-        requireNotNull(adapter.fromJson(decoded)?.toArticle()) {
-            "Failed to parse Article from navigation argument"
-        }
-    }
+    // The article URL is a required navigation argument — always present in SavedStateHandle
+    // when navigated to via AppNavGraph. Preserved across process death by the nav back-stack.
+    private val articleUrl: String = checkNotNull(savedStateHandle[NavRoutes.DETAIL_ARG])
 
-    private val _uiState = MutableStateFlow(DetailUiState(article = article))
+    private val _uiState = MutableStateFlow<DetailUiState>(
+        articlesCache.findByUrl(articleUrl)
+            ?.let { DetailUiState.Loaded(it) }
+            ?: DetailUiState.Unavailable
+    )
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
 }

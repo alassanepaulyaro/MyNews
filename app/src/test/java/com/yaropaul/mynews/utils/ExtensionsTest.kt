@@ -1,32 +1,39 @@
 package com.yaropaul.mynews.utils
 
+import com.yaropaul.mynews.R
+import com.yaropaul.mynews.ui.UiText
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
 
 class ExtensionsTest {
 
     @Test
-    fun `IOException returns no internet connection message`() {
-        val e = IOException()
-        assertEquals("No internet connection. Please check your network.", e.toUserMessage())
+    fun `IOException returns string resource for no internet`() {
+        val result = IOException().toUserMessage()
+        assertTrue(result is UiText.StringResource)
+        assertEquals(R.string.error_no_internet, (result as UiText.StringResource).resId)
     }
 
     @Test
-    fun `generic exception with message returns the message`() {
-        val e = RuntimeException("Something went wrong")
-        assertEquals("Something went wrong", e.toUserMessage())
+    fun `generic exception with message returns dynamic string`() {
+        val result = RuntimeException("Something went wrong").toUserMessage()
+        assertTrue(result is UiText.DynamicString)
+        assertEquals("Something went wrong", (result as UiText.DynamicString).value)
     }
 
     @Test
-    fun `generic exception with blank message returns fallback`() {
-        val e = RuntimeException("   ")
-        assertEquals("An unexpected error occurred.", e.toUserMessage())
+    fun `generic exception with blank message returns string resource for unexpected error`() {
+        val result = RuntimeException("   ").toUserMessage()
+        assertTrue(result is UiText.StringResource)
+        assertEquals(R.string.error_unexpected, (result as UiText.StringResource).resId)
     }
 
     @Test
-    fun `generic exception with null message returns fallback`() {
-        val e = RuntimeException()
-        assertEquals("An unexpected error occurred.", e.toUserMessage())
+    fun `generic exception with null message returns string resource for unexpected error`() {
+        val result = RuntimeException().toUserMessage()
+        assertTrue(result is UiText.StringResource)
+        assertEquals(R.string.error_unexpected, (result as UiText.StringResource).resId)
     }
 }

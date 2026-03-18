@@ -1,5 +1,6 @@
 package com.yaropaul.mynews.domain.usecase
 
+import com.yaropaul.mynews.domain.NewsDefaults
 import com.yaropaul.mynews.domain.model.Article
 import com.yaropaul.mynews.domain.repository.NewsRepository
 import com.yaropaul.mynews.utils.LanguageProvider
@@ -31,6 +32,9 @@ class GetTopHeadlinesUseCase @Inject constructor(
         if (articles.isNotEmpty()) return articles
 
         // Attempt 3 — global US/EN fallback
-        return repository.getTopHeadlines(country = "us", language = "en")
+        return repository.getTopHeadlines(
+            country = NewsDefaults.FALLBACK_COUNTRY,
+            language = NewsDefaults.FALLBACK_LANGUAGE
+        )
     }
 }

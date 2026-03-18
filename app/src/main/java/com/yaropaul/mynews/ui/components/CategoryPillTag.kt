@@ -1,13 +1,13 @@
 package com.yaropaul.mynews.ui.components
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.padding
+import com.yaropaul.mynews.ui.theme.Dimens
 
 @Composable
 fun CategoryPillTag(
@@ -15,14 +15,14 @@ fun CategoryPillTag(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        shape = RoundedCornerShape(50),
+        shape = RoundedCornerShape(Dimens.PillCornerRadius),
         color = MaterialTheme.colorScheme.surfaceVariant,
         modifier = modifier
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+            modifier = Modifier.padding(horizontal = Dimens.PillPaddingH, vertical = Dimens.PillPaddingV)
         )
     }
 }

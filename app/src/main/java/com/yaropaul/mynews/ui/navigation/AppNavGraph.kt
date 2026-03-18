@@ -2,6 +2,7 @@ package com.yaropaul.mynews.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,19 +20,15 @@ fun AppNavGraph(
     ) {
         composable(NavRoutes.MAIN) {
             MainScreen(
-                onArticleClick = { article ->
-                    navController.navigate(
-                        NavRoutes.detailRoute(ArticleNavType.serializeAsValue(article))
-                    )
+                onNavigateToDetail = { articleUrl ->
+                    navController.navigate(NavRoutes.detailRoute(articleUrl))
                 }
             )
         }
         composable(
             route = NavRoutes.DETAIL,
             arguments = listOf(
-                navArgument(NavRoutes.ARG_ARTICLE) {
-                    type = ArticleNavType
-                }
+                navArgument(NavRoutes.DETAIL_ARG) { type = NavType.StringType }
             )
         ) {
             DetailScreen(

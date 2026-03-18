@@ -13,9 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.yaropaul.mynews.domain.model.Article
 import com.yaropaul.mynews.ui.components.ArticleImage
+import com.yaropaul.mynews.ui.theme.Dimens
 
 @Composable
 fun NewsCard(
@@ -27,8 +27,8 @@ fun NewsCard(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(Dimens.CardCornerRadius),
+        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.CardElevation),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
@@ -37,9 +37,10 @@ fun NewsCard(
             if (article.urlToImage.isNotBlank()) {
                 ArticleImage(
                     url = article.urlToImage,
+                    contentDescription = article.title,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(Dimens.CardImageHeight)
                 )
             }
             Text(
@@ -47,7 +48,7 @@ fun NewsCard(
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(Dimens.CardContentPadding)
             )
         }
     }

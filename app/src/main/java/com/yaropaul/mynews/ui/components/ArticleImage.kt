@@ -6,13 +6,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.yaropaul.mynews.ui.theme.Dimens
 
 @Composable
 fun ArticleImage(
     url: String,
+    contentDescription: String?,
     modifier: Modifier = Modifier
 ) {
     AsyncImage(
@@ -20,8 +21,8 @@ fun ArticleImage(
             .data(url.ifBlank { null })
             .crossfade(true)
             .build(),
-        contentDescription = null,
+        contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
-        modifier = modifier.clip(RoundedCornerShape(12.dp))
+        modifier = modifier.clip(RoundedCornerShape(Dimens.CardCornerRadius))
     )
 }

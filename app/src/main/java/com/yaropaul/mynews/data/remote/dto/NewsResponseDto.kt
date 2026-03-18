@@ -1,11 +1,10 @@
 package com.yaropaul.mynews.data.remote.dto
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class NewsResponseDto(
-    @Json(name = "status") val status: String,
-    @Json(name = "totalResults") val totalResults: Int,
-    @Json(name = "articles") val articles: List<ArticleDto>
+    val status: String,
+    val totalResults: Int,
+    val articles: List<ArticleDto>
 )
